@@ -36,27 +36,24 @@ class Queue:
         if not self.head:
             return None
         current_head = self.head
+        self.head = self.head.next
         self.size -= 1 
-        return current_head
+        print(f"{current_head.data}  has been moved off the waitlist.")
+        return current_head.data
     
-    def add(self,item):
+    def add(self, item):
         new_node = Node(item)
-        if not self.head:
+        if self.head is None:
             self.head = new_node
         else:
             current = self.head
-            while current.next:
-                if not current.next:
-                    break
+            while current.next is not None:
                 current = current.next
             current.next = new_node
         self.size += 1
 
     def is_empty(self):
-        if self.head is None:
-            return False
-        else:
-            return True  
+       return self.head is None
     
     def __iter__(self):
         node = self.head
@@ -71,19 +68,13 @@ class Queue:
             return_str = return_str + str(node.data) + "--"
             return return_str
         
-        def __str__(self):
-            if self.is_empty():
-                return "Waitlist: Empty"
-
-            return_str = "Waitlist:  "
-            first_node = True
-            for node in self:
-                if not first_node:
-                    return_str += " -- "
-                return_str += node.data.first + " " + node.data.last
-                first_node = False
-            return return_str
-
+    def __str__(self):
+        if self.is_empty():
+            return "Waitlist Status: Empty"
+        names = []
+        for node in self:
+            names.append(node.data.first + " " + node.data.last)
+        return "Waitlist Status:  " + " -- ".join(names) + " "
 
 if __name__ == '__main__':
     s1 = Student("jobs", "steve")
@@ -101,5 +92,5 @@ if __name__ == '__main__':
     while not waitlist.is_empty():
         waitlist.pop_left()
         print(waitlist)
-        if not waitlist.is_empty():
+        if waitlist.size > 0:
             print("size is: ", waitlist.size)
